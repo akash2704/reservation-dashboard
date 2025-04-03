@@ -1,20 +1,45 @@
-// app/page.tsx
 "use client";
 
 import { useState } from "react";
 import { ReservationCard } from "@/components/ReservationCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CalendarIcon, FilterIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { CalendarIcon, PlusIcon, SearchIcon } from "lucide-react";
+
+// Define the Reservation interface with proper types
+interface Guest {
+  name: string;
+  initial: string;
+}
+
+interface Guests {
+  adults: number;
+  children: number;
+}
+
+interface Reservation {
+  id: string;
+  guest: Guest;
+  status: "Pending" | "Canceled" | "Confirmed"; // Define specific status values
+  checkIn: string;
+  checkOut: string;
+  email: string;
+  phone: string;
+  bookingDate: string;
+  guests: Guests;
+  total: number;
+  due: number;
+  docStatus: "Received" | "Pending" | "Partial 1/2"; // Define specific docStatus values
+}
 
 // Sample data to match your image
-const reservations = [
+const reservations: Reservation[] = [
   {
     id: "112345",
     guest: { name: "John Doe", initial: "B" },
@@ -27,7 +52,7 @@ const reservations = [
     guests: { adults: 2, children: 1 },
     total: 500,
     due: 200,
-    docStatus: "Received"
+    docStatus: "Received",
   },
   {
     id: "112346",
@@ -41,7 +66,7 @@ const reservations = [
     guests: { adults: 2, children: 1 },
     total: 300,
     due: 100,
-    docStatus: "Pending"
+    docStatus: "Pending",
   },
   {
     id: "TestRsvID",
@@ -55,7 +80,7 @@ const reservations = [
     guests: { adults: 2, children: 1 },
     total: 1300,
     due: 100,
-    docStatus: "Partial 1/2"
+    docStatus: "Partial 1/2",
   },
   {
     id: "121347",
@@ -69,7 +94,7 @@ const reservations = [
     guests: { adults: 2, children: 1 },
     total: 750,
     due: 50,
-    docStatus: "Received"
+    docStatus: "Received",
   },
   {
     id: "121348",
@@ -83,7 +108,7 @@ const reservations = [
     guests: { adults: 2, children: 0 },
     total: 400,
     due: 400,
-    docStatus: "Pending"
+    docStatus: "Pending",
   },
   {
     id: "121349",
@@ -97,13 +122,13 @@ const reservations = [
     guests: { adults: 1, children: 0 },
     total: 300,
     due: 150,
-    docStatus: "Received"
-  }
+    docStatus: "Received",
+  },
 ];
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   return (
     <main className="min-h-screen bg-black text-white p-6">
       <div className="container mx-auto">
@@ -112,7 +137,20 @@ export default function Home() {
           <div className="flex items-center space-x-2">
             <Button variant="outline" size="sm">
               Actions
-              <svg className="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"/></svg>
+              <svg
+                className="ml-2 h-4 w-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
             </Button>
             <Button size="sm" className="bg-blue-500 hover:bg-blue-600">
               <PlusIcon className="mr-2 h-4 w-4" />
@@ -120,23 +158,39 @@ export default function Home() {
             </Button>
           </div>
         </div>
-        
+
         <div className="flex flex-wrap gap-4 mb-6">
           <div className="relative flex-grow max-w-md">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            <Input 
-              placeholder="Search" 
-              className="pl-10 bg-gray-800 border-gray-700" 
+            <SearchIcon
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={16}
+            />
+            <Input
+              placeholder="Search"
+              className="pl-10 bg-gray-800 border-gray-700"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="text-gray-400">
                 Communication
-                <svg className="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"/></svg>
+                <svg
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -145,12 +199,25 @@ export default function Home() {
               <DropdownMenuItem>WhatsApp</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="text-gray-400">
                 Status
-                <svg className="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"/></svg>
+                <svg
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -159,12 +226,25 @@ export default function Home() {
               <DropdownMenuItem>Canceled</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="text-gray-400">
                 Source
-                <svg className="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"/></svg>
+                <svg
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -173,12 +253,25 @@ export default function Home() {
               <DropdownMenuItem>Agent</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="text-gray-400">
                 Payment
-                <svg className="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"/></svg>
+                <svg
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -187,20 +280,20 @@ export default function Home() {
               <DropdownMenuItem>Pending</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           <Button variant="outline" size="sm" className="text-gray-400">
             <CalendarIcon className="mr-2 h-4 w-4" />
             Pick date range
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {reservations.map((reservation) => (
-            <ReservationCard 
+            <ReservationCard
               key={reservation.id}
               id={reservation.id}
               guest={reservation.guest}
-              status={reservation.status as any}
+              status={reservation.status}
               checkIn={reservation.checkIn}
               checkOut={reservation.checkOut}
               email={reservation.email}
@@ -209,7 +302,7 @@ export default function Home() {
               guests={reservation.guests}
               total={reservation.total}
               due={reservation.due}
-              docStatus={reservation.docStatus as any}
+              docStatus={reservation.docStatus}
             />
           ))}
         </div>
